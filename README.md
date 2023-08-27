@@ -28,15 +28,26 @@ wget -O - http://bin.entware.net/aarch64-k3.10/installer/generic.sh | sh
 Check contents of /opt to validate. Reboot and see that entware installation survives the boot.
 
 # Entware initialization
-Stock firmware will do some kind of init by executing files from /opt/etc/init.d on start (by /usr/sbin/app_init_run.sh?) and creates some kind of pseudo PID file(?) for each file named /opt/initfile.1. So in example /opt/etc/init.d/S99debug will be ran and /opt/S99debug.1 will be created. Seems also that apps/services can be enabled and disabled and based on that start or stop will be performed for each init file. This is quite incompatible with entware init so entware must be initialized by executing /opt/etc/init.d/rc.unslung . 
+Stock firmware will do some kind of init by executing files from /opt/etc/init.d on start (by /usr/sbin/app_init_run.sh?) and creates some kind of pseudo PID file(?) for each file named /opt/initfile.1. So in example /opt/etc/init.d/S99debug will be ran and /opt/S99debug.1 will be created. Seems also that apps/services can be enabled and disabled and based on that start or stop will be performed for each init file. This is  incompatible with entware init so entware must be initialized by executing /opt/etc/init.d/rc.unslung . 
 
 We can piggyback stock init process by creating file /opt/etc/init.d/S99entware without execute flag set. Stock process will then try to "stop" this app/service but we can actually call entware start from there:
 
 ```
-echo -e "#!/bin/sh\n/opt/etc/init.d/rc.unslung start" > /opt/etc/init.d/S99entware
+echo -e "#!/bin/sh\nchmod -x /opt/etc/init.d/S99entware\n/opt/etc/init.d/rc.unslung start" > /opt/etc/init.d/S99entware
 ```
 
 On the other hand, entware scripts will init only executable files so S99entware won't be called this on infinite loop. Downside is that all entware services are first stopped by stock process and then started by entware process. 
+
+# No entware initialization
+Further research revealed that it is also possible to allowe stock init to init entware services as well without doing entware initialization hack. Stock process will check if file /opt/lib/ipkg/info/service.control exists and if it contains line "Enabled: yes". If so then init file is called with start option. Just create control file for service you want to enable e.g. for lighttpd: 
+
+```
+mkdir /opt/lib/ipkg
+mkdir /opt/lib/ipkg/info
+echo "Enabled: yes" > /opt/lib/ipkg/info/lighttpd.control
+```
+
+This can, of course, break on Asuswrt and entware upgrades.
 
 # Sources and links
 - https://github.com/Entware/Entware/wiki
