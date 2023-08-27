@@ -5,7 +5,7 @@ Usually Asuswrt-Merlin firmware is used when customizing Asus routers (you reall
 Tested with RT-AC86U.
 
 # Background
-Entware likes to be installed to /opt. On stock Asuswrt /opt is symlinkked to /tmp/opt, which does not exist. On the other hand, when USB stick is mounted then stock firmware checks if asusware.arm/.asusrouter file exists on the stick and if it does, firmware will symlink /tmp/opt to /tmp/mnt/.../asusware.arm so /opt now points to asusware.arm directory on your USB stick. Additionally /opt/sbin, /opt/bin, /opt/usr/sbin and /opt/usr/bin will be added to the path. Seems that in the past asusware.arm/.asusrouter file was executed as well but that seems no longer to be the case(?).
+Entware likes to be installed to /opt. On stock Asuswrt /opt is symlinkked to /tmp/opt, which does not exist. On the other hand, when USB stick is mounted then stock firmware checks if asusware.arm/.asusrouter file exists on the stick and if it does, firmware will symlink /tmp/opt to /tmp/mnt/.../asusware.arm so /opt now points to asusware.arm directory on your USB stick. Additionally /opt/sbin, /opt/bin, /opt/usr/sbin and /opt/usr/bin will be added to the path. Seems that in the past asusware.arm/.asusrouter file was executed as well but that seems no longer to be the case.
 
 This behaviour can be witnessed by installing Download Master from GUI and checking contents of the USB stick afterwards.
 
@@ -17,7 +17,7 @@ cd /tmp/mnt/.../
 mkdir asusware.arm
 touch asusware.arm/.asusrouter
 ```
-Reboot and check that /opt now really is symlink to asusware.arm on your USB stick.
+Reboot and check that /opt now is symlink to asusware.arm on your USB stick.
 - Install entware
 ```
 cd /opt
@@ -26,15 +26,15 @@ wget -O - http://bin.entware.net/aarch64-k3.10/installer/generic.sh | sh
 Check contents of /opt to validate. Reboot and see that entware installation survives the boot.
 
 # Entware initialization
-Stock firmware will do some kind of init by executing files from /opt/etc/init.d on start by /usr/sbin/app_init_run.sh and creates some kind of pseudo PID file for each file named /opt/initfile.1. So in example /opt/etc/init.d/S99debug will be ran and /opt/S99debug.1 will be created. Services can be enabled and disabled and based on that start or stop option will be provided for each init file. This is incompatible with entware init so entware must be initialized by executing /opt/etc/init.d/rc.unslung . 
+Stock firmware will do init by executing files from /opt/etc/init.d on start by /usr/sbin/app_init_run.sh. Services can be enabled and disabled and based on that start or stop option will be provided for each init file. This is incompatible with entware init so entware must be initialized by executing /opt/etc/init.d/rc.unslung . 
 
-We can piggyback stock init process by creating file /opt/etc/init.d/S99entware without execute flag set. Stock process will then try to stop this app/service but we can actually call entware start from there:
+We can piggyback stock init process by creating file /opt/etc/init.d/S99entware without execute flag set. Stock process will then try to stop this service since it is not enabled but we can actually call entware start from there:
 
 ```
 echo -e "#!/bin/sh\nchmod -x /opt/etc/init.d/S99entware\n/opt/etc/init.d/rc.unslung start" > /opt/etc/init.d/S99entware
 ```
 
-On the other hand, entware scripts will init only executable files so S99entware won't be called this on infinite loop. Downside is that all entware services are first stopped (though they are not running) by stock process and then started by entware process. 
+On the other hand, entware scripts will init only executable files so S99entware won't be called this no infinite loop. Downside is that all entware services are first stopped (though they are not running) by stock process and then started by entware process. 
 
 # No entware initialization
 Further research revealed that it is also possible to allow stock init to init entware services as well without doing entware initialization hack above. Stock process will check if file /opt/lib/ipkg/info/service.control exists and if it contains line "Enabled: yes". If so then init file is called with start option. Just create control file for service you want to enable e.g. for lighttpd do: 
