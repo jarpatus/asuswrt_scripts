@@ -11,13 +11,11 @@ This behaviour can be witnessed by installing Download Master from GUI and check
 
 # Entware installation
 - Format USB stick to ext3 file system if not already ext3.
-- Create asusware.arm/.asusrouter file to USB stick and chmod to 777:
+- Create asusware.arm/.asusrouter file to USB stick:
 ```
 cd /tmp/mnt/.../
 mkdir asusware.arm
-chmod 777 asusware.arm/
 touch asusware.arm/.asusrouter
-chmod 777 asusware.arm/.asusrouter
 ```
 Reboot and check that /opt now really is symlink to asusware.arm on your USB stick.
 - Install entware
