@@ -16,7 +16,7 @@ This behaviour can be witnessed by installing Download Master from GUI and check
 cd /tmp/mnt/.../
 mkdir asusware.arm
 chmod 777 asusware.arm/
-echo "#!/bin/sh" > asusware.arm/.asusrouter
+touch asusware.arm/.asusrouter
 chmod 777 asusware.arm/.asusrouter
 ```
 Reboot and check that /opt now really is symlink to asusware.arm on your USB stick.
@@ -31,7 +31,7 @@ Check contents of /opt to validate. Reboot and see that entware installation sur
 To initialize entware services on boot, add initialization command to .asusrouter:
 ```
 cd /opt
-echo "/opt/etc/init.d/rc.unslung start" >> asusware.arm/.asusrouter
+echo "/opt/etc/init.d/rc.unslung start" >> .asusrouter
 ```
 
 # Sources and links
