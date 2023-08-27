@@ -28,11 +28,9 @@ wget -O - http://bin.entware.net/aarch64-k3.10/installer/generic.sh | sh
 Check contents of /opt to validate. Reboot and see that entware installation survives the boot.
 
 # Entware initialization
-To initialize entware services on boot, add initialization command to .asusrouter:
-```
-cd /opt
-echo "/opt/etc/init.d/rc.unslung start" >> .asusrouter
-```
+Stock firmware will also run all init files from /opt/etc/init.d on start and create some kind of pseudo PID file (?) named /opt/initfile.1. So in example /opt/etc/init.d/S99debug will be run and /opt/S99debug.1 will be created. When debugging please notice that /tmp seems to be cleared (?) after init so if you try to validate init by creating files to /tmp you won't see them. Use /opt/tmp instead. 
+
+Entware does want to /opt/etc/init.d/rc.unslung to be executed on start but it also just start init files. So rc.unslung can be left alone and everything still should work. I realize that this could be source of compatibility problems so YMMV (when tested, at least lighttpd seems to init just fine).
 
 # Sources and links
 - https://github.com/Entware/Entware/wiki
