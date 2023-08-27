@@ -1,5 +1,5 @@
 # Install entware on stock Asuswrt firmware
-Usually Asuswrt-Merlin firmware is used when customizing Asus routers (you really should use it) but if for reason or another you want to stay stock but still use entware, it is possible. There are guides out there which do utilize script_usbmount setting in nvram to run custom script on USB mount but it is possible to do it without nvram so you can plug USB stick to factory resetted router and it just works. Or it is possible to use nvram but simpler scripts than usual.
+Usually Asuswrt-Merlin firmware is used when customizing Asus routers (you really should use it) but if for reason or another you want to stay stock but still use entware, it is possible. There are guides out there which do utilize script_usbmount setting in nvram to run custom script on USB mount but it is possible to do it without nvram so you can plug USB stick to factory resetted router and it just works (or it is possible to use nvram but simpler scripts than usual but then factory resetted device won't work anymore).
 
 # Compatibility
 Tested with RT-AC86U.
@@ -27,7 +27,7 @@ wget -O - http://bin.entware.net/aarch64-k3.10/installer/generic.sh | sh
 ```
 Check contents of /opt to validate. Reboot and see that entware installation survives the boot.
 
-# Entware initialization (no nvram)
+# Entware initialization
 Stock firmware will do some kind of init by executing files from /opt/etc/init.d on start (by /usr/sbin/app_init_run.sh?) and creates some kind of pseudo PID file(?) for each file named /opt/initfile.1. So in example /opt/etc/init.d/S99debug will be ran and /opt/S99debug.1 will be created. Seems also that apps/services can be enabled and disabled and based on that start or stop will be performed for each init file. This is quite incompatible with entware init so entware must be initialized by executing /opt/etc/init.d/rc.unslung . 
 
 We can piggyback stock init process by creating file /opt/etc/init.d/S99entware without execute flag set. Stock process will then try to "stop" this app/service but we can actually call entware start from there:
