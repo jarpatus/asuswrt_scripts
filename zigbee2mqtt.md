@@ -1,5 +1,5 @@
 # Run zigbee2mqtt on Asuswrt / Asuswrt-Merlin
-If Asus router is ran as AP only then there is more than enough available power to run zigbee2mqtt on router. This could be useful since routers are usually on good spot and you don't have to dedicate yet another rpi zero or something for the task. Use fast USB stick and remember to use USB extension cable for the zigbee stick!
+In many Asus routers there is more than enough available power to run zigbee2mqtt on router. This could be useful since routers are usually on good spot and you don't have to dedicate yet another rpi zero or something for the task. Use fast USB stick and remember to use USB extension cable for the zigbee stick!
 
 ## Entware
 Install entware, if using Asuswrt-Merlin see official wiki (https://github.com/RMerl/asuswrt-merlin.ng/wiki/), if running stock then see instructions (https://github.com/jarpatus/asuswrt_scripts/blob/main/entware_on_stock.md).
@@ -43,6 +43,17 @@ npm start
 To load kernel modules and start zigbee2mqtt on boot create init file /opt/etc/init.d/S50zigbee2mqtt containing following script:
 
 ```
+#!/bin/bash
+
+ENABLED=yes
+PRECMD="rmmod option ; modprobe usbserial ; insmod /opt/opt/cp210x/cp210x.ko"
+PROCS=node
+ARGS="/opt/opt/zigbee2mqtt/index.js"
+PREARGS=""
+DESC="zigbee2mqtt"
+PATH=/opt/sbin:/opt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+. /opt/etc/init.d/rc.func
 ```
 
 
