@@ -15,6 +15,33 @@ mkswap /opt/swapfile
 
 - Create init file /opt/etc/init.d/01swap which enables swap on boot:
 ```
+#!/bin/sh
+
+ACTION=$1
+CALLER=$2
+
+    case $ACTION in
+        start)
+            start
+            ;;
+        stop | kill )
+            check && stop
+            ;;
+        restart)
+            check > /dev/null && stop
+            start
+            ;;
+        check)
+            check
+            ;;
+        reconfigure)
+            reconfigure
+            ;;
+        *)
+            echo -e "$ansi_white Usage: $0 (start|stop|restart|check|kill|reconfigure)$ansi_std"
+            exit 1
+            ;;
+    esac
 
 ```
 
