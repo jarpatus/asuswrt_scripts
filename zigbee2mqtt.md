@@ -89,21 +89,18 @@ esac
 
 ```
 
-
-to enable swap on boot:
-
 ## USB-to-serial driver
-Most likely kernel won't contain driver for USB-to-serial adapter used by you zigbee stick. If using Asuswrt-Merlin then follow official wiki on how to download and compile custom firmware. I found it easiest to use docker. Set driver to be compiled as a module in config_base.6a i.e. change `# CONFIG_USB_SERIAL_CP210X is not set` is not set to `CONFIG_USB_SERIAL_CP210X=m`. Compile but there is no need to actually upload custom firmware to your router, just scp resulting module to the router e.g. drivers/usb/serial/cp210x.ko to /opt/opt/cp210x or so.
+Most likely kernel won't contain driver for USB-to-serial adapter used by you zigbee stick. If using Asuswrt-Merlin then follow official wiki on how to download and compile custom firmware. I found it easiest to use docker. Set required driver to be compiled as a module in config_base.6a i.e. change `# CONFIG_USB_SERIAL_CP210X is not set` to `CONFIG_USB_SERIAL_CP210X=m`. Compile kernel `make kernel` and copy resulting module to the router e.g. copy drivers/usb/serial/cp210x.ko from compiled kernel to /opt/opt/cp210x on your router.
 
-Then remove option module (if loaded and load usbserial and USB-to-serial modules i.e.:
+Then load required module:
 ```
-rmmod option
-modprobe usbserial
 insmod /opt/opt/cp210x/cp210x.ko
 ```
 
+Looks like it is possible to use module compuiled for Asuswrt-Merlin for stock firmware as well, but YMMV.
+
 ## Node.js
-Install Node.js required by the zigbee2mqtt and git for pulling latest zigbee2mqtt.
+Install Node.js as zigbee2mqtt is build on it. Also install git for pulling zigbee2mqtt sources.
 
 ```
 opkg install node node-npm git-http
@@ -131,16 +128,15 @@ To load kernel modules and start zigbee2mqtt on boot create init file /opt/etc/i
 #!/bin/bash
 
 ENABLED=yes
-PRECMD="rmmod option ; modprobe usbserial ; insmod /opt/opt/cp210x/cp210x.ko"
-PROCS=node
-ARGS="/opt/opt/zigbee2mqtt/index.js"
+PRECMD=""
+PROCS="node"
+ARGS="index.js"
 PREARGS=""
 DESC="zigbee2mqtt"
 PATH=/opt/sbin:/opt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
+insmod /opt/opt/cp210x/cp210x.ko 2> /dev/null
+cd /opt/opt/zigbee2mqtt
+
 . /opt/etc/init.d/rc.func
 ```
-
-
-
-
