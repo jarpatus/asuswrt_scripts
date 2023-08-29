@@ -5,7 +5,7 @@ In many Asus routers there is more than enough available power to run zigbee2mqt
 Install entware, if using Asuswrt-Merlin see official wiki (https://github.com/RMerl/asuswrt-merlin.ng/wiki/). If running stock then see instructions (https://github.com/jarpatus/asuswrt_scripts/blob/main/entware_on_stock.md).
 
 ## Swap
-There may not be enough memory to compile nodejs modules. Create swapfile as instructed in official Asuswrt-Merlin wiki or if using stock firmware then take following steps:
+There may not be enough memory to compile nodejs modules. Create swapfile as instructed in official Asuswrt-Merlin wiki. If using stock firmware and only if using stock then take following steps:
 
 - Create swapfile 
 ```
@@ -17,31 +17,75 @@ mkswap /opt/swapfile
 ```
 #!/bin/sh
 
-ACTION=$1
-CALLER=$2
+DESC=swap
+SWAPFILE=/opt/swapfile
 
-    case $ACTION in
-        start)
-            start
-            ;;
-        stop | kill )
-            check && stop
-            ;;
-        restart)
-            check > /dev/null && stop
-            start
-            ;;
-        check)
-            check
-            ;;
-        reconfigure)
-            reconfigure
-            ;;
-        *)
-            echo -e "$ansi_white Usage: $0 (start|stop|restart|check|kill|reconfigure)$ansi_std"
-            exit 1
-            ;;
-    esac
+ACTION=$1
+
+ansi_red="\033[1;31m";
+ansi_white="\033[1;37m";
+ansi_green="\033[1;32m";
+ansi_std="\033[m";
+
+start() {
+	echo -e -n "$ansi_white Starting $DESC... $ansi_std"
+	swapon $SWAPFILE
+	if [ $? -ne 0 ]; then
+		echo -e "            $ansi_red failed. $ansi_std"
+		logger "Failed to start $DESC from $CALLER."
+		return 255
+	else
+		echo -e "            $ansi_green done. $ansi_std"
+		logger "Started $DESC from $CALLER."
+		return 0
+	fi
+}
+
+stop() {
+	echo -e -n "$ansi_white Shutting down $DESC... $ansi_std"
+	swapoff $SWAPFILE
+	if [ $? -ne 0 ]; then
+		echo -e "       $ansi_red failed. $ansi_std"
+		return 255
+	else
+		echo -e "       $ansi_green done. $ansi_std"
+		return 0
+	fi
+}
+
+check() {
+	echo -e -n "$ansi_white Checking $DESC... "
+		if cat /proc/swaps | grep swapfile > /dev/null; then
+		echo -e "            $ansi_green alive. $ansi_std";
+		return 0
+	else
+		echo -e "            $ansi_red dead. $ansi_std";
+		return 1
+	fi
+}
+
+case $ACTION in
+	start)
+		check || start
+		;;
+	stop | kill )
+		check && stop
+		;;
+	restart)
+		check > /dev/null && stop
+		start
+		;;
+	check)
+		check
+		;;
+	reconfigure)
+		stop
+		;;
+	*)
+		echo -e "$ansi_white Usage: $0 (start|stop|restart|check|kill|reconfigure)$ansi_std"
+		exit 1
+		;;
+esac
 
 ```
 
