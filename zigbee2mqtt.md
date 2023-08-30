@@ -101,10 +101,10 @@ insmod /opt/opt/cp210x/cp210x.ko
 Looks like it is possible to use module compuiled for Asuswrt-Merlin for stock firmware as well, but YMMV.
 
 ## Node.js
-Install Node.js as zigbee2mqtt is build on it. Also install git for pulling zigbee2mqtt sources.
+Install Node.js as zigbee2mqtt is build on it. Also install git for pulling zigbee2mqtt sources and daemonize for running zigbee2mqtt as a daemon.
 
 ```
-opkg install node node-npm git-http
+opkg install node node-npm git-http daemonize
 ```
 
 ## zigbee2mqtt
