@@ -21,6 +21,7 @@ DESC=swap
 SWAPFILE=/opt/swapfile
 
 ACTION=$1
+CALLER=$2
 
 ansi_red="\033[1;31m";
 ansi_white="\033[1;37m";
