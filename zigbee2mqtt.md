@@ -126,18 +126,97 @@ npm start
 To load kernel modules and start zigbee2mqtt on boot create init file /opt/etc/init.d/S50zigbee2mqtt containing following script:
 
 ```
-#!/bin/bash
+#!/bin/sh
 
-ENABLED=yes
-PRECMD=""
-PROCS="node"
-ARGS="index.js"
-PREARGS=""
-DESC="zigbee2mqtt"
-PATH=/opt/sbin:/opt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+DESC=zigbee2mqtt
+DIR=/opt/opt/zigbee2mqtt
+PIDFILE=/tmp/$DESC.pid
 
-insmod /opt/opt/cp210x/cp210x.ko 2> /dev/null
-cd /opt/opt/zigbee2mqtt
+ACTION=$1
+CALLER=$2
 
-. /opt/etc/init.d/rc.func
+ansi_red="\033[1;31m";
+ansi_white="\033[1;37m";
+ansi_green="\033[1;32m";
+ansi_std="\033[m";
+
+start() {
+        echo -e -n "$ansi_white Starting $DESC... $ansi_std"
+        insmod /opt/opt/cp210x/cp210x.ko 2> /dev/null
+        daemonize -c $DIR -p $PIDFILE /opt/bin/node index.js
+        if [ $? -eq 0 ]; then
+                echo -e "            $ansi_green done. $ansi_std"
+                logger "Started $DESC from $CALLER."
+                return 0
+        else
+                echo -e "            $ansi_red failed. $ansi_std"
+                logger "Failed to start $DESC from $CALLER."
+                return 255
+        fi
+}
+
+stop() {
+        echo -e -n "$ansi_white Shutting down $DESC... $ansi_std"
+        kill `cat $PIDFILE`
+        while kill -0 `cat $PIDFILE` 2> /dev/null; do
+            sleep 1
+        done
+        if [ $? -eq 0 ]; then
+                echo -e "       $ansi_green done. $ansi_std"
+                return 0
+        else
+                echo -e "       $ansi_red failed. $ansi_std"
+                return 255
+        fi
+}
+
+_kill() {
+        echo -e -n "$ansi_white Killing $DESC... $ansi_std"
+        kill -9 `cat $PIDFILE`
+        if [ $? -eq 0 ]; then
+                echo -e "             $ansi_green done. $ansi_std"
+                return 0
+        else
+                echo -e "             $ansi_red failed. $ansi_std"
+                return 255
+        fi
+ }
+
+check() {
+        echo -e -n "$ansi_white Checking $DESC... "
+        test -f $PIDFILE && kill -0 `cat $PIDFILE` 2> /dev/null
+        if [ $? -eq 0 ]; then
+                echo -e "            $ansi_green alive. $ansi_std";
+                return 0
+        else
+                echo -e "            $ansi_red dead. $ansi_std";
+                return 1
+        fi
+}
+
+case $ACTION in
+        start)
+                check || start
+                ;;
+        stop)
+                check && stop
+                ;;
+        kill)
+                check && _kill
+                ;;
+        restart)
+                check && stop
+                start
+                ;;
+        check)
+                check
+                ;;
+        reconfigure)
+                stop
+                ;;
+        *)
+                echo -e "$ansi_white Usage: $0 (start|stop|restart|check|kill|reconfigure)$ansi_std"
+                exit 1
+                ;;
+esac
 ```
