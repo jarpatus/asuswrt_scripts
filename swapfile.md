@@ -7,11 +7,11 @@ dd if=/dev/zero of=/opt/swapfile bs=1M count=4096
 mkswap /opt/swapfile
 ```
 
-- Create init file /opt/etc/init.d/01swap which enables swap on boot:
+- Create init file /opt/etc/init.d/01swapfile which enables swapfile on boot:
 ```
 #!/bin/sh
 
-DESC=swap
+DESC=swapfile
 SWAPFILE=/opt/swapfile
 
 ACTION=$1
