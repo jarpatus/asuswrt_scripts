@@ -17,45 +17,24 @@ At this point nothing seemed to work as it should have, until I found out that M
 include ./chip_profile.mak
 ```
 
-
-
-```
-ln -s release/src-rt-5.04axhnd.675x/toolchains/ /opt
-export LD_LIBRARY_PATH=/opt/toolchains/crosstools-arm-gcc-9.2-linux-4.19-glibc-2.30-binutils-2.32/usr/lib
-export TOOLCHAIN_BASE=/opt/toolchains
-export PATH=/opt/toolchains/crosstools-arm-gcc-9.2-linux-4.19-glibc-2.30-binutils-2.32/usr/bin:/opt/toolchains/crosstools-aarch64-gcc-9.2-linux-4.19-glibc-2.30-binutils-2.32/usr/bin:/projects/hnd/tools/linux/hndtools-armeabi-2011.09/bin:$PATH
-```
-
-  
-```
-```
-
-
-
-- Make some required top level stuff like maketargets command (probably am using this wrong):
-- ```
-source /home/docker/envs/bcm-hnd-ax-4.19.sh 
-cd release/src-rt
-make rt-ax86u
-```
-
- 
-- 
-
-is a bit tricky and is not instructed here, but in essence you need to download GPL pakcage for your router which contains kernel sources and setup suitable environment perhaps using docker and some ready made environment from docker hub.  
-
-If using Asuswrt-Merlin then follow official wiki on how to download and compile custom firmware. I found it easiest to use docker. Set required driver to be compiled as a module in config_base.6a i.e. change `# CONFIG_USB_SERIAL_CP210X is not set` to `CONFIG_USB_SERIAL_CP210X=m`. Compile kernel `make kernel` and copy resulting module to the router e.g. copy drivers/usb/serial/cp210x.ko from compiled kernel to /opt/opt/cp210x on your router.
-
-Then load required module:
-```
-insmod /opt/opt/cp210x/cp210x.ko
-```
-
-Looks like it is possible to use module compuiled for Asuswrt-Merlin for stock firmware as well, but YMMV.
-
-## Node.js
-Install Node.js as zigbee2mqtt is build on it. Also install git for pulling zigbee2mqtt sources and daemonize for running zigbee2mqtt as a daemon.
+Now it should be possible to build kernel and modules:
 
 ```
-opkg install node node-npm git-http daemonize
+make kernel RT-AX86U_PRO image
+make kernel RT-AX86U_PRO modules
 ```
+
+For me both commands produced an error at some point, but got far enough to actually compile kernel image and modules. Edit kernel/linux-4.19/.config and add modules you want to, e.g.:
+
+```
+CONFIG_USB_SERIAL_CP210X=m
+```
+
+Recompile modules and ssh them to your router:
+
+```
+
+```
+
+
+
