@@ -2,16 +2,22 @@
 Stock firmware does not include that many modules and it may be necessary to compile new modules e.g. for USB devices like USB-to-serial adapters. Building new modules for stock firmware is bit black magic and poorly documented (?) but these steps were successfull with RT-AX86U Pro and 3.0.0.4.388_23565:
 
 - Get GPL sources for your router from Asus (router support page, operating system Other )
-- Unzip and untar, cd to asuswrt
-- Use docker and gnuton's image: https://hub.docker.com/r/gnuton/asuswrt-merlin-toolchains-docker
-
-  - Start container in asuswrt/ folder
-- Install some required packages:
+- Extract
+- Use gnuton's docker image: https://hub.docker.com/r/gnuton/asuswrt-merlin-toolchains-docker
+- Start container in asuswrt/ folder
+- Prepare building environment and go to correct release directory e.g.:
 ```
-sudo apt install gdisk
+source /home/docker/envs/bcm-hnd-ax-4.19.sh
+cd release/src-rt-5.04axhnd.675x/
 ```
 
-- Prepare building environment
+At this point nothing seemed to work as it should have, until I found out that Makefile is missing one crucial row (?!) which should be added to the top of the Makefile if missing. Also keep in mind that you run make even once and it fails, it may have done lot's of settings files already and make clean seems not to work properly either -> start from scratch.  
+
+```
+include ./chip_profile.mak
+```
+
+
 
 ```
 ln -s release/src-rt-5.04axhnd.675x/toolchains/ /opt
