@@ -1,5 +1,5 @@
 # Swap
-There may not be enough memory to do everything (i.e. if you try to install zigbee2mqtt, it will compile some node.js modules and could run out of memory) so swap file may be needed:
+There may not be enough memory to do everything (i.e. if you try to install zigbee2mqtt, it will compile some node.js modules and could run out of memory especially with lower end models) so swap file may be needed:
 
 - Create swapfile 
 ```
