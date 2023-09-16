@@ -7,6 +7,8 @@ https://github.com/jarpatus/asuswrt_scripts/blob/main/README.md.
 ## Create swap
 https://github.com/jarpatus/asuswrt_scripts/blob/main/swapfile.md.
 
+Note: On my RT-AX86U Pro with 1GB memory, no swap were needed. Memory consumption were 610 MB when compiling. 
+
 ## USB-to-serial driver
 Most likely kernel won't contain driver for USB-to-serial adapter used by you zigbee stick. Building new modules for stock firmware is a bit tricky and is not instructed here, but in essence you need to download GPL pakcage for your router which contains kernel sources and setup suitable environment perhaps using docker and some ready made environment from docker hub.  
 
