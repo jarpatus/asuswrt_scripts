@@ -1,10 +1,12 @@
-# Run zigbee2mqtt on Asuswrt / Asuswrt-Merlin
+# zigbee2mqtt
 In many Asus routers there is more than enough available power to run zigbee2mqtt on router. This could be useful since routers are usually on good spot and you don't have to dedicate yet another rpi zero or something for the task. Use fast USB stick and remember to use USB extension cable for the zigbee stick!
 
 ## Install entware
-Install entware, if using Asuswrt-Merlin see official wiki (https://github.com/RMerl/asuswrt-merlin.ng/wiki/). If running stock then see instructions (https://github.com/jarpatus/asuswrt_scripts/blob/main/entware_on_stock.md).
+https://github.com/jarpatus/asuswrt_scripts/blob/main/entware_on_stock.md.
 
-## Swap
+## Create swap
+https://github.com/jarpatus/asuswrt_scripts/blob/main/swapfile.md.
+
 There may not be enough memory to compile nodejs modules. Create swapfile as instructed in official Asuswrt-Merlin wiki. If using stock firmware and only if using stock then take following steps:
 
 - Create swapfile 
