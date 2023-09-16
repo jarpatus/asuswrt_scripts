@@ -10,7 +10,42 @@ https://github.com/jarpatus/asuswrt_scripts/blob/main/swapfile.md.
 Note: On my RT-AX86U Pro with 1GB memory, no swap were needed. Memory consumption were 610 MB when compiling. 
 
 ## USB-to-serial driver
-Most likely kernel won't contain driver for USB-to-serial adapter used by you zigbee stick. Building new modules for stock firmware is a bit tricky and is not instructed here, but in essence you need to download GPL pakcage for your router which contains kernel sources and setup suitable environment perhaps using docker and some ready made environment from docker hub.  
+Most likely kernel won't contain driver for USB-to-serial adapter used by you zigbee stick. Building new modules for stock firmware is bit black magic and there seem to be no clear instructions? I had success to build cp210x module by steps something like this:
+
+- Get GPL sources for your router from Asus
+- Use docker and following image for build environment https://hub.docker.com/r/gnuton/asuswrt-merlin-toolchains-docker
+- Start container in asuswrt/ folder
+- Install some required packages:
+```
+sudo apt install gdisk
+```
+
+- Prepare building environment
+
+```
+ln -s release/src-rt-5.04axhnd.675x/toolchains/ /opt
+export LD_LIBRARY_PATH=/opt/toolchains/crosstools-arm-gcc-9.2-linux-4.19-glibc-2.30-binutils-2.32/usr/lib
+export TOOLCHAIN_BASE=/opt/toolchains
+export PATH=/opt/toolchains/crosstools-arm-gcc-9.2-linux-4.19-glibc-2.30-binutils-2.32/usr/bin:/opt/toolchains/crosstools-aarch64-gcc-9.2-linux-4.19-glibc-2.30-binutils-2.32/usr/bin:/projects/hnd/tools/linux/hndtools-armeabi-2011.09/bin:$PATH
+```
+
+  
+```
+```
+
+
+
+- Make some required top level stuff like maketargets command (probably am using this wrong):
+- ```
+source /home/docker/envs/bcm-hnd-ax-4.19.sh 
+cd release/src-rt
+make rt-ax86u
+```
+
+ 
+- 
+
+is a bit tricky and is not instructed here, but in essence you need to download GPL pakcage for your router which contains kernel sources and setup suitable environment perhaps using docker and some ready made environment from docker hub.  
 
 If using Asuswrt-Merlin then follow official wiki on how to download and compile custom firmware. I found it easiest to use docker. Set required driver to be compiled as a module in config_base.6a i.e. change `# CONFIG_USB_SERIAL_CP210X is not set` to `CONFIG_USB_SERIAL_CP210X=m`. Compile kernel `make kernel` and copy resulting module to the router e.g. copy drivers/usb/serial/cp210x.ko from compiled kernel to /opt/opt/cp210x on your router.
 
