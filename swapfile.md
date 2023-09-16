@@ -7,7 +7,7 @@ dd if=/dev/zero of=/opt/swapfile bs=1M count=4096
 mkswap /opt/swapfile
 ```
 
-- Create init file /opt/etc/init.d/01swapfile which enables swapfile on boot, using e.g. vi or nano:
+- Create init file /opt/etc/init.d/S01swapfile which enables swapfile on boot, using e.g. vi or nano:
 ```
 #!/bin/sh
 
@@ -86,7 +86,7 @@ esac
 
 - Make it executable:
 ```
-chmod +x /opt/etc/init.d/01swapfile
+chmod +x /opt/etc/init.d/S01swapfile
 ```
 
 - Reboot and use e.g. htop to check that you indeed now have 4GB swap.
