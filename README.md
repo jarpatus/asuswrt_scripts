@@ -9,11 +9,20 @@ Tested with RT-AX86U Pro. YMMV.
 # Background
 Entware must to be installed to /opt. On stock Asuswrt /opt is either symlinkked to /tmp/opt, which does not exist, or subfolders under /opt are symlinkked to /tmp/opt/... which do not exist either. Looks like older models symlink whole /opt and newer models folders under /opt.
 
-When an USB stick is plugged in and mounted then stock firmware checks if asusware.arm/.asusrouter file exists on the stick and if it does, firmware will symlink /tmp/opt to /tmp/mnt/.../asusware.arm so /opt now points to asusware.arm directory on your USB stick. Additionally /opt/sbin, /opt/bin, /opt/usr/sbin and /opt/usr/bin will be added to the path. Seems that in the past asusware.arm/.asusrouter file was executed as well but that seems no longer to be the case?
+When an USB stick is plugged in and mounted then stock firmware checks if asusware.arm/.asusrouter file exists on the stick and if it does, firmware will symlink /tmp/opt to /tmp/mnt/.../asusware.arm so /opt now points to asusware.arm directory on your USB stick. 
+
+Additionally /opt/sbin, /opt/bin, /opt/usr/sbin and /opt/usr/bin will be added to the path. Seems that in the past asusware.arm/.asusrouter file was executed as well but that seems no longer to be the case. 
+
+Stock firmware will then do initialization by running /usr/sbin/app_init_run.sh which executes service specific init files from /opt/etc/init.d if service has been set as enabled in /opt/lib/ipkg/info/service.control file.
 
 This behaviour can be witnessed by installing Download Master from GUI and checking contents of the USB stick afterwards. Like said earlier, exact behaviour seems to differ from model to model or firmware to firmware so adjustments may be necessary .
 
+
+
+
+
 # Entware installation
+We are goi
 - Format USB stick to ext3 file system if not already ext3.
 - Create asusware.arm/.asusrouter file to USB stick:
 ```
