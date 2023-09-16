@@ -30,7 +30,7 @@ For me both commands produced an error at some point (missing version.h), but go
 CONFIG_USB_SERIAL_CP210X=m
 ```
 
-Recompile modules and ssh them to your router i.e.:
+Recompile modules (probably you could just compile one module and also without pre-compiling anything, but at least this worked for me) and ssh them to your router i.e.:
 
 ```
 cat ./targets/94912GW/modules/lib/modules/4.19.183/kernel/drivers/usb/serial/cp210x.ko | ssh user@rt-ax86u "cat > /opt/opt/cp210x.ko"
