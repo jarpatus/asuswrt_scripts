@@ -33,14 +33,14 @@ CONFIG_USB_SERIAL_CP210X=m
 Recompile modules (probably you could just compile one module and also without pre-compiling anything, but at least this worked for me) and ssh them to your router i.e.:
 
 ```
-cat ./targets/94912GW/modules/lib/modules/4.19.183/kernel/drivers/usb/serial/cp210x.ko | ssh user@rt-ax86u "cat > /opt/opt/cp210x.ko"
+cat ./targets/94912GW/modules/lib/modules/4.19.183/kernel/drivers/usb/serial/cp210x.ko | ssh user@rt-ax86u "cat > /opt/opt/modules/cp210x.ko"
 ```
 
 SSH to your router and load module:
 
 ```
 modprobe usbserial
-insmod /opt/opt/cp210x.ko
+insmod /opt/opt/modules/cp210x.ko
 ```
 
 You may or may not have to recompile module with new firmware releases.
