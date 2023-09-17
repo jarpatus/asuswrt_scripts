@@ -10,7 +10,7 @@ Entware likes to be installed to /opt. On stock Asuswrt /opt is symlinkked to /t
 This behaviour can be witnessed by installing Download Master from GUI and checking contents of the USB stick afterwards.
 
 # Entware installation
-- Format USB stick to ext3 file system if not already ext3.
+- Format USB stick to ext3 file system (ext4 is ok, but stock firmware has no mkfs.ext4 so need to use another Linux box).
 - Create asusware.arm/.asusrouter file to USB stick:
 ```
 cd /tmp/mnt/.../
