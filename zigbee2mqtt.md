@@ -7,8 +7,6 @@ https://github.com/jarpatus/asuswrt_scripts/blob/main/README.md.
 ## Create swap
 https://github.com/jarpatus/asuswrt_scripts/blob/main/swapfile.md.
 
-Note: On my RT-AX86U Pro with 1GB memory, no swap were needed. Memory consumption were 610 MB when compiling. 
-
 ## USB-to-serial driver
 https://github.com/jarpatus/asuswrt_scripts/blob/main/kernel_modules.md
 
