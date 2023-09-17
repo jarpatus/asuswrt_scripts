@@ -22,7 +22,7 @@ opkg install node node-npm git-http daemonize
 Note: At least on RT-AX86U Pro node.js version v18.17.1 seems to be unstable and crash when doing any I/O heavy operations. Version v16.19.1 from archive seems to work just fine (https://bin.entware.net/aarch64-k3.10/archive/):
 
 ```
-cd /opt/opt/tmp
+cd /opt/tmp
 wget https://bin.entware.net/aarch64-k3.10/archive/node_v16.19.1-1_aarch64-3.10.ipk https://bin.entware.net/aarch64-k3.10/archive/node-npm_v16.19.1-1_aarch64-3.10.ipk
 opkg install node_v16.19.1-1_aarch64-3.10.ipk node-npm_v16.19.1-1_aarch64-3.10.ipk git-http daemonize
 ```
