@@ -134,3 +134,8 @@ case $ACTION in
                 ;;
 esac
 ```
+
+- Make it executable
+```
+chmod +x /opt/etc/init.d/S50zigbee2mqtt
+```
