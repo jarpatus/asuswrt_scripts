@@ -2,10 +2,12 @@
 In many Asus routers there is more than enough available power to run zigbee2mqtt on router. This could be useful since routers are usually on good spot and you don't have to dedicate yet another rpi zero or something for the task. Use fast USB stick and remember to use USB extension cable for the zigbee stick!
 
 ## Install entware
-https://github.com/jarpatus/asuswrt_scripts/blob/main/README.md.
+https://github.com/jarpatus/asuswrt_scripts/blob/main/README.md
 
 ## Create swap
-https://github.com/jarpatus/asuswrt_scripts/blob/main/swapfile.md.
+https://github.com/jarpatus/asuswrt_scripts/blob/main/swapfile.md
+
+Note: On models having 1GB RAM swap may not be necessary, however perhaps it's best to use it just to be on safe side.
 
 ## USB-to-serial driver
 https://github.com/jarpatus/asuswrt_scripts/blob/main/kernel_modules.md
@@ -16,6 +18,8 @@ Install Node.js as zigbee2mqtt is build on it. Also install git for pulling zigb
 ```
 opkg install node node-npm git-http daemonize
 ```
+
+Note: At least on RT-AX86U Pro node.js version v18.17.1 seems to be unstable and crash when doing any I/O heavy operations. Version v16.19.1 from archive seems to work just fine (https://bin.entware.net/aarch64-k3.10/archive/).
 
 ## zigbee2mqtt
 Install zigbee2mqtt.
