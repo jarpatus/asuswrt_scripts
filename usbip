@@ -32,15 +32,18 @@ insmod /opt/opt/modules/usbip-core.ko
 insmod /opt/opt/modules/usbip-host.ko
 ```
 
-List devices:
+List devices, take a note of busid of your USB stick:
 
 ```
+usbip list -l
+```
+
+Bind your USB stick i.e.:
+```
+usbip bind -b 1-2.1
 ```
 
 
-
-```
-```
 ```
 ```
 
