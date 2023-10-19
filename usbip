@@ -19,13 +19,30 @@ CONFIG_USBIP_CORE=m
 When you compile modules, you will get prompted what to do for sub-modules, mark Host driver to be compiled as module. 
 
 ## usbip
-Install usbip-server, load driver and test.
+Install usbip:
 
 ```
-opkg install usbip-server
-
+opkg install usbip-server usbip-client
 ```
 
+Load required modules:
+
+```
+insmod /opt/opt/modules/usbip-core.ko
+insmod /opt/opt/modules/usbip-host.ko
+```
+
+List devices:
+
+```
+```
+
+
+
+```
+```
+```
+```
 
 
 
