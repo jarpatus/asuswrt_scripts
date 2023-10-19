@@ -12,6 +12,10 @@ Note: On models having 1GB RAM swap may not be necessary, however perhaps it's b
 ## USB-to-serial driver
 https://github.com/jarpatus/asuswrt_scripts/blob/main/kernel_modules.md
 
+```
+CONFIG_USB_SERIAL_CP210X=m
+```
+
 ## Node.js
 Install Node.js as zigbee2mqtt is build on it. Also install git for pulling zigbee2mqtt sources and daemonize for running zigbee2mqtt as a daemon.
 
