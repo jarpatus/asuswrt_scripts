@@ -32,6 +32,11 @@ insmod /opt/opt/modules/usbip-core.ko
 insmod /opt/opt/modules/usbip-host.ko
 ```
 
+Start usbipd:
+```
+/opt/etc/init.d/S74usbipd start
+```
+
 List devices, take a note of busid of your USB stick:
 
 ```
