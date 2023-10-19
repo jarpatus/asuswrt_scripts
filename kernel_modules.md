@@ -36,7 +36,7 @@ Recompile modules (probably you could just compile one module and also without p
 cat ./targets/94912GW/modules/lib/modules/4.19.183/kernel/drivers/usb/serial/cp210x.ko | ssh user@rt-ax86u "cat > /opt/opt/modules/cp210x.ko"
 ```
 
-SSH to your router and load module:
+SSH to your router and load module e.g.:
 
 ```
 modprobe usbserial
