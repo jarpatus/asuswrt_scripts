@@ -1,0 +1,37 @@
+diff -hur '--exclude=data' zigbee2mqtt.org/dist/extension/availability.js zigbee2mqtt/dist/extension/availability.js
+--- zigbee2mqtt.org/dist/extension/availability.js      2023-09-17 13:10:51.000000000 +0300
++++ zigbee2mqtt/dist/extension/availability.js  2023-11-11 09:11:24.437016000 +0200
+@@ -70,7 +70,7 @@
+     isAvailable(entity) {
+         if (entity.isDevice()) {
+             const ago = Date.now() - entity.zh.lastSeen;
+-            return ago < this.getTimeout(entity);
++            return !entity._publishFailed && ago < this.getTimeout(entity);
+         }
+         else {
+             return entity.membersDevices().length === 0 ||
+@@ -190,6 +190,10 @@
+     }
+     onLastSeenChanged(data) {
+         if (utils_1.default.isAvailabilityEnabledForEntity(data.device, settings.get())) {
++
++            // Hack to make device offline as soon as any publish fails
++            data.device._publishFailed = (data.reason == 'publishFailed');
++
+             // Remove from ping queue, not necessary anymore since we know the device is online.
+             this.removeFromPingQueue(data.device);
+             this.resetTimer(data.device);
+diff -hur '--exclude=data' zigbee2mqtt.org/dist/extension/publish.js zigbee2mqtt/dist/extension/publish.js
+--- zigbee2mqtt.org/dist/extension/publish.js   2023-11-11 09:11:58.680016000 +0200
++++ zigbee2mqtt/dist/extension/publish.js       2023-11-11 09:05:18.500016000 +0200
+@@ -294,6 +294,10 @@
+                 logger_1.default.error(message);
+                 logger_1.default.debug(error.stack);
+                 this.legacyLog({ type: `zigbee_publish_error`, message, meta: { friendly_name: re.name } });
++
++               // Hack to make device offline as soon as any publish fails
++               this.eventBus.emitLastSeenChanged({ device: re, reason: 'publishFailed' });
++
+             }
+             usedConverters[endpointOrGroupID].push(converter);
+         }
