@@ -1,4 +1,4 @@
-SORRY, THIS DOES NOT WORK!
+SORRY, THIS DOES NOT WORK! Let me know if you are able to make it work. VirtualHere commerical solution (https://www.virtualhere.com/) worked just fine...
 
 # Bluetooth over USB/IP
 I've been running zigbee2mqtt on my RT-AX86U Pro for a while now and it's been wonderful as my router is in excellent place signal wise and my home automation server is in very bad one. Recently I wanted to use Bluetooth USB stick but the same problem applies. However, unlike zigbee2mqtt which can be ran on router itself, running Bluetooth anything would be probably too much to ask. But how about sharing USB stick itself over TCP/IP? Turns out that too works nicely. 
