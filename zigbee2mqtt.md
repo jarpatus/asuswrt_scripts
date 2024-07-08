@@ -64,9 +64,47 @@ ansi_white="\033[1;37m";
 ansi_green="\033[1;32m";
 ansi_std="\033[m";
 
+_kill() {
+        echo -e -n "$ansi_white Killing $DESC... $ansi_std"
+        kill -9 `cat $PIDFILE`
+        if [ $? -eq 0 ]; then
+                echo -e "             $ansi_green done. $ansi_std"
+                return 0
+        else
+                echo -e "             $ansi_red failed. $ansi_std"
+                return 255
+        fi
+}
+maint@RT-AX86U_Pro-EB20:/opt/etc/init.d# cat S50zigbee2mqtt
+#!/bin/sh
+
+DESC=zigbee2mqtt
+DIR=/opt/opt/zigbee2mqtt
+PIDFILE=/tmp/$DESC.pid
+
+ACTION=$1
+CALLER=$2
+
+ansi_red="\033[1;31m";
+ansi_white="\033[1;37m";
+ansi_green="\033[1;32m";
+ansi_std="\033[m";
+
+_kill() {
+        echo -e -n "$ansi_white Killing $DESC... $ansi_std"
+        kill -9 `cat $PIDFILE`
+        if [ $? -eq 0 ]; then
+                echo -e "             $ansi_green done. $ansi_std"
+                return 0
+        else
+                echo -e "             $ansi_red failed. $ansi_std"
+                return 255
+        fi
+}
+
 start() {
         echo -e -n "$ansi_white Starting $DESC... $ansi_std"
-        insmod /opt/opt/cp210x/cp210x.ko 2> /dev/null
+        insmod /opt/opt/modules/cp210x.ko 2> /dev/null
         daemonize -c $DIR -p $PIDFILE /opt/bin/node index.js
         if [ $? -eq 0 ]; then
                 echo -e "            $ansi_green done. $ansi_std"
@@ -81,30 +119,22 @@ start() {
 
 stop() {
         echo -e -n "$ansi_white Shutting down $DESC... $ansi_std"
-        kill `cat $PIDFILE`
-        while kill -0 `cat $PIDFILE` 2> /dev/null; do
+        COUNTER=0
+        LIMIT=10
+        kill `cat $PIDFILE` 2> /dev/null
+        while [ $? -eq 0 -a "$COUNTER" -le "$LIMIT" ]; do
+            COUNTER=`expr $COUNTER + 1`
             sleep 1
+            kill -0 `cat $PIDFILE` 2> /dev/null
         done
-        if [ $? -eq 0 ]; then
-                echo -e "       $ansi_green done. $ansi_std"
-                return 0
+        if [ $? -eq 1 ]; then
+            echo -e "       $ansi_green done. $ansi_std"
+            return 0
         else
-                echo -e "       $ansi_red failed. $ansi_std"
-                return 255
+            echo -e "       $ansi_red failed. $ansi_std"
+            return 255
         fi
 }
-
-_kill() {
-        echo -e -n "$ansi_white Killing $DESC... $ansi_std"
-        kill -9 `cat $PIDFILE`
-        if [ $? -eq 0 ]; then
-                echo -e "             $ansi_green done. $ansi_std"
-                return 0
-        else
-                echo -e "             $ansi_red failed. $ansi_std"
-                return 255
-        fi
- }
 
 check() {
         echo -e -n "$ansi_white Checking $DESC... "
