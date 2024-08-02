@@ -21,10 +21,10 @@ rm chip_profile.tmp
 make RT-AX86U_PRO
 ```
 
-This will create chip_profile.tmp containing build details of your router and will try to build whole firmware. As we do not need whole firmware, Ctrl+C and just build kernel image and modules instead:
+This will create chip_profile.tmp containing build details of your router and will try to build whole firmware. As we do not need whole firmware, Ctrl+C and just build kernel image and/or modules instead:
 ```
-make RT-AX86U_PRO image
-make RT-AX86U_PRO modules
+make kernel image
+make kernel modules
 ```
 
 For me both commands produced an error at some point (missing version.h), but got far enough to actually compile kernel image and modules. Edit kernel/linux-4.19/.config and add modules you want to, e.g.:
