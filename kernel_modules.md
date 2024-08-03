@@ -21,7 +21,7 @@ rm chip_profile.tmp
 make RT-AX86U_PRO
 ```
 
-This will create chip_profile.tmp containing build details of your router and will try to build whole firmware. As we do not need whole firmware, Ctrl+C and just build kernel image and/or modules instead:
+This will create chip_profile.tmp containing build details of your router and will try to build whole firmware. As we do not need whole firmware, wait until compile starts (you see gcc commands) then Ctrl+C and just build kernel image and/or modules instead:
 ```
 make kernel image
 make kernel modules
